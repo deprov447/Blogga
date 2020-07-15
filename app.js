@@ -3,7 +3,7 @@ var mongoose= require("mongoose");
 var express = require("express");
 var app = express();
 
-mongoose.connect("mongodb://localhost/blog");
+mongoose.connect("mongodb://localhost/blogs");
 app.set("view engine","ejs")
 app.use(bodyParser.urlencoded({extended: true}));
 
