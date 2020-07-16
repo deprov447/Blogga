@@ -1,3 +1,7 @@
+<%- include ("partials/header")%>
 <h1><%= blog.title %></h1>
 <p><%= blog.body %></p>
 <img src="<%= blog.image %>" alt="Blog Image">
+<form action="<%= blog._id %>?_method=DELETE" method="POST">
+    <button>DELETE</button>
+</form>

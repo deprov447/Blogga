@@ -2,13 +2,16 @@ var bodyParser= require("body-parser");
 var mongoose= require("mongoose");
 var express = require("express");
 var app = express();
+var methOvr= require("method-override");
 
-mongoose.connect("mongodb://localhost/blogs");
+mongoose.connect("mongodb://localhost/blogs", { useNewUrlParser: true, useUnifiedTopology: true });
 app.set("view engine","ejs")
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methOvr("_method"));
 
 app.listen("8080",function(){
-    console.log("Server Online");
+    console.log("Server Online")
+    console.log("GO TO localhost:8080");
 })
 
 var blogSchema = new mongoose.Schema({
@@ -32,6 +35,7 @@ app.get("/blogs",function(req,res){
     Blog.find({},function(err, blogs){
         if(err)
         {
+
             console.log("ERROR");
             res.send("error"+err);
         }
@@ -83,15 +87,21 @@ app.get("/blogs/:id/edit",function(req,res){
         }
     })
 })
-app.post("/blogs/:id/update",function(req,res){
-    Blog.findById(req.params.id, function(err, thatblog){
-        if(err){
-            console.log("EEERRORR ON Edit Route");
+app.put("/blogs/:id",function(req,res){
+    Blog.findByIdAndUpdate(req.params.id, req.body.blog,function(err,updblog){
+        if(err)
+        {
+            console.log(err);
         }
         else{
-            // thatblog.title=req.params.title;
-            // thatblog.body=req.params.body;
-            res.send("deed");
+            res.redirect("/");
         }
+    })
+})
+
+//DELETE ROUTE
+app.delete("/blogs/:id",function(req, res){
+    Blog.findByIdAndRemove(req.params.id, function(err){
+        res.redirect("/");
     })
 })
