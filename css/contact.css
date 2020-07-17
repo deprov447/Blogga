@@ -1,7 +1,6 @@
 
 .contact{
     padding: 4%;
-    height: 400px;
 }
 .col-md-3{
     background: #ff9b00;
@@ -35,10 +34,4 @@
 }
 .contact-form button:focus{
     box-shadow:none;
-}
-footer{ 
-  position: fixed; 
-  bottom:0; 
-  width:100%; 
-  height:100px; 
 }
