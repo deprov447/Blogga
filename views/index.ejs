@@ -1,12 +1,25 @@
-this is a index page
-
-<%- include ("partials/header")%>
-<ul>
-<% blogs.forEach(function(blog){ %>
-        <li>
-            <%= blog.title %>
-            <a href="blogs/<%= blog._id%>"> Show more</a>
+<%- include("partials/header.ejs")%>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Submitted By</th>
+          <th scope="col">Make Changes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% var i=0 %>
+        <% blogs.forEach(function(blog){ %>
+        <tr>
+          <th scope="row"><%= ++i%></th>
+          <td><a href="blogs/<%= blog._id%>"> <%= blog.title %></a></td>
+          <td>Priyanshu</td>
+          <td>
             <a href="blogs/<%= blog._id %>/edit"> EDIT</a>
-        </li>
-<% }) %>
-</ul>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <%- include("partials/footer.ejs")%>

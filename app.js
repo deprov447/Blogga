@@ -4,6 +4,7 @@ var express = require("express");
 var app = express();
 var methOvr= require("method-override");
 
+app.use(express.static((__dirname + '/public')));
 mongoose.connect("mongodb://localhost/blogs", { useNewUrlParser: true, useUnifiedTopology: true });
 app.set("view engine","ejs")
 app.use(bodyParser.urlencoded({extended: true}));
