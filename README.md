@@ -33,11 +33,11 @@ The main directory has the following structure
 
 **Front-End**
 
-> [Priyanshu Gupta](github.com/guptapriyanshu7)
+> [Priyanshu Gupta](https://github.com/guptapriyanshu7)
 
 **Back-End** 
 
-> [Anubhav Choudhary](github.com/deprov447)
+> [Anubhav Choudhary](https://github.com/deprov447)
 
 ##  :) Contribute
 
