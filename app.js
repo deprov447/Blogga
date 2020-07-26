@@ -1,8 +1,11 @@
-var bodyParser= require("body-parser");
-var mongoose= require("mongoose");
-var express = require("express");
-var app = express();
-var methOvr= require("method-override");
+const e = require("express");
+
+var bodyParser      = require("body-parser"),
+    mongoose        = require("mongoose"),
+    express         = require("express"),
+    app             = express(),
+    methOvr         = require("method-override"),
+    comment         = require("./models/comment");
 
 app.use(express.static((__dirname + '/public')));
 mongoose.connect("mongodb://localhost/blogs", { useNewUrlParser: true, useUnifiedTopology: true });
@@ -19,7 +22,11 @@ var blogSchema = new mongoose.Schema({
     title: String,
     image: String,
     body: String,
-    created: {type: Date, default: Date.now}
+    created: {type: Date, default: Date.now},
+    comment:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "comment"
+    }]
 });
 
 var Blog = mongoose.model("Blog", blogSchema);
@@ -67,7 +74,7 @@ app.post("/blogs",function(req,res){
 
 //show
 app.get("/blogs/:id",function(req,res){
-    Blog.findById(req.params.id,function(err, foundBlog){
+    Blog.findById(req.params.id).populate("comment").exec( function (err, foundBlog) {
         if(err){
             console.log("EEORROR ON SHOW ROUTE")
         }
@@ -103,6 +110,33 @@ app.put("/blogs/:id",function(req,res){
 //DELETE ROUTE
 app.delete("/blogs/:id",function(req, res){
     Blog.findByIdAndRemove(req.params.id, function(err){
-        res.redirect("/");
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.redirect("/");
+        }
+    })
+})
+
+//Comment
+app.post("/blogs/:id/comments/new",function(req,res){
+    Blog.findById(req.params.id,function(err,Blog){
+        if(err){
+            console.log(err)
+        }
+        else{
+            comment.create(req.body.comment,function(err,comment){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log(Blog);
+                    Blog.comment.push(comment);
+                    Blog.save();
+                    res.redirect("/")
+                }
+            })
+        }
     })
 })
