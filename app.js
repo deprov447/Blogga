@@ -1,5 +1,3 @@
-const seedtheDB = require("./seeder");
-
 var bodyParser      = require("body-parser"),
     mongoose        = require("mongoose"),
     express         = require("express"),
@@ -7,10 +5,28 @@ var bodyParser      = require("body-parser"),
     methOvr         = require("method-override"),
     comment         = require("./models/comment"),
     Blog            = require("./models/blog"),
-    seed            = require("./seeder");
+    seed            = require("./seeder"),
+    User            = require("./models/user"),
+    passport        = require("passport"),
+    localStrategy   = require("passport-local"),
+    psMongoose      = require("passport-local-mongoose");
+
+
+app.use(require("express-session")({
+    secret: "Everyone of our deeds is merely a response to some previous, unsettled deed",
+    resave: false,
+    saveUninitialized: false
+}));
+
+passport.use(new localStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 console.log("Seeding DB with dummy data",seed());
-app.use(express.static((__dirname + '/public')));
 mongoose.connect("mongodb://localhost/blogs", { useNewUrlParser: true, useUnifiedTopology: true });
 app.set("view engine","ejs")
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,6 +37,10 @@ app.listen("8080",function(){
     console.log("GO TO localhost:8080");
 })
 
+app.use(function(req,res,next){
+    res.locals.currUser= req.user;
+    next();
+})
 
 //Index
 app.get("/",function(req,res){
@@ -41,12 +61,12 @@ app.get("/blogs",function(req,res){
 });
 
 //New
-app.get("/blogs/new",function(req,res){
+app.get("/blogs/new",isLoggedIn,function(req,res){
     res.render("new");
 })
 
 //Create
-app.post("/blogs",function(req,res){
+app.post("/blogs",isLoggedIn,function(req,res){
     Blog.create(req.body, function(err, newBlog){
         if(err){
             console.log("ERRRORRR SUBBMIITTTING")
@@ -71,7 +91,7 @@ app.get("/blogs/:id",function(req,res){
 })
 
 //Edit
-app.get("/blogs/:id/edit",function(req,res){
+app.get("/blogs/:id/edit",isLoggedIn,function(req,res){
     Blog.findById(req.params.id, function(err, thatblog){
         if(err){
             console.log("EEERRORR ON Edit Route");
@@ -83,7 +103,7 @@ app.get("/blogs/:id/edit",function(req,res){
 })
 
 //Update
-app.put("/blogs/:id",function(req,res){
+app.put("/blogs/:id",isLoggedIn,function(req,res){
     Blog.findByIdAndUpdate(req.params.id, req.body.blog,function(err,updblog){
         if(err)
         {
@@ -96,7 +116,7 @@ app.put("/blogs/:id",function(req,res){
 })
 
 //Delete
-app.delete("/blogs/:id",function(req, res){
+app.delete("/blogs/:id",isLoggedIn,function(req, res){
     Blog.findByIdAndRemove(req.params.id, function(err){
         if(err){
             console.log(err);
@@ -108,7 +128,7 @@ app.delete("/blogs/:id",function(req, res){
 })
 
 //Comment
-app.post("/blogs/:id/comments/new",function(req,res){
+app.post("/blogs/:id/comments/new",isLoggedIn,function(req,res){
     Blog.findById(req.params.id,function(err,Blog){
         if(err){
             console.log(err)
@@ -122,9 +142,50 @@ app.post("/blogs/:id/comments/new",function(req,res){
                     console.log(Blog);
                     Blog.comment.push(comment);
                     Blog.save();
-                    res.redirect("/")
+                    res.redirect("/blogs/"+req.params.id);
                 }
             })
         }
     })
 })
+
+///authentications
+app.get("/login",function(req,res){
+    res.render("login");
+})
+
+app.get("/logout",function(req,res){
+    req.logout();
+    res.redirect("/")
+})
+
+app.get("/register",function(req,res){
+    res.render("register");
+})
+
+app.post("/login",passport.authenticate("local",{
+    successRedirect: "/blogs",
+    failureRedirect: "/login"
+}),function(req,res){    
+})
+
+app.post("/register",function(req,res){
+    User.register(new User({username: req.body.username}),req.body.password,function(err,user){
+        if(err){
+            console.log(err);
+            res.redirect("/register");
+        }
+        else{
+            passport.authenticate("local")(req,res,function(){
+                res.redirect("/blogs");
+            })
+        }
+    })
+})
+
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated())
+       return next();
+    res.redirect("/login");
+    
+}
