@@ -23,7 +23,7 @@ The main directory has the following structure
 
 ## Setting Up Development Server
 
-    git clone https://github.com/guptapriyanshu7/blogs.git
+    git clone https://github.com/guptapriyanshu7/blogga.git
     
     npm install
 
