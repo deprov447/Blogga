@@ -28,7 +28,7 @@ app.use(passport.session());
 
 console.log("Seeding DB with dummy data",seed());
 mongoose.connect("mongodb://localhost/blogs", { useNewUrlParser: true, useUnifiedTopology: true });
-app.set("view engine","ejs")
+// app.set("view engine","ejs")
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methOvr("_method"));
 
