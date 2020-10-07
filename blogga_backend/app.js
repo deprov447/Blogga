@@ -55,7 +55,8 @@ app.get("/blogs",function(req,res){
         }
         else
         {
-            res.render("index",{blogs:blogs});
+            // res.render("index",{blogs:blogs});
+            res.json(blogs)
         }
     })
 });
@@ -85,7 +86,8 @@ app.get("/blogs/:id",function(req,res){
             console.log("EEORROR ON SHOW ROUTE")
         }
         else{
-            res.render("show",{blog: foundBlog})
+            // res.render("show",{blog: foundBlog})
+            res.json(foundBlog)
         }
     })
 })
