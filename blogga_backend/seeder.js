@@ -5,6 +5,7 @@ var mongoose = require("mongoose"),
 var dummydata=[
     {
         title: "Blog Post 1- dummy",
+        author: "anubhav",
         image: "https://image.shutterstock.com/z/stock-vector-portraits-of-women-of-different-nationalities-and-cultures-struggle-for-freedom-independence-1746248672.jpg",
         // comment:
         // [
@@ -21,6 +22,7 @@ var dummydata=[
     },
     {
         title: "Blog Post 2- dummy",
+        author: "anubhav",
         image: "https://image.shutterstock.com/z/stock-vector-portraits-of-women-of-different-nationalities-and-cultures-struggle-for-freedom-independence-1746248672.jpg",
         // comment:
         // [
