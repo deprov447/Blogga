@@ -1,0 +1,25 @@
+
+
+<div class="container" >
+  <div class="card" *ngFor="let item of data">
+    <div class="img">
+      <img src="{{ item.image }}" />
+    </div>
+    <div class="top-text">
+      <div class="name">{{ item.title }}</div>
+      <span class="center">
+
+        Penned by {{ item.author }}
+      </span>
+    </div>
+    <div class="bottom-text">
+      <div class="text">{{ item.body.substring(0, 50) }}...</div>
+      <span class="right">
+        {{ item.created.substring(0, 10) }}
+      </span>
+      <div class="btn">
+        <a [routerLink]="['/blogDetails']" routerLinkActive="router-link-active" >Read more</a>
+      </div>
+    </div>
+  </div>
+</div>

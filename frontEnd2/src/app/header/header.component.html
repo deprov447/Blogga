@@ -1,0 +1,19 @@
+<div *ngIf="nav_display; else signUp_display">
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+  <nav>
+    <div class="logo">Blogga</div>
+    <input type="checkbox" id="click" />
+    <label for="click" class="menu-btn">
+      <i class="fas fa-bars"></i>
+    </label>
+    <ul>
+      <li><a class="active" href="#">Home</a></li>
+      <li><a [routerLink]="['/SignUp']" routerLinkActive="router-link-active" >SignUp</a></li>
+      <li><a href="#">About Us</a></li>
+    </ul>
+  </nav>
+</div>
+<ng-template #signUp_display>
+ 
+</ng-template>

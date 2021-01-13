@@ -9,7 +9,8 @@ var bodyParser = require("body-parser"),
   User = require("./models/user"),
   passport = require("passport"),
   localStrategy = require("passport-local"),
-  psMongoose = require("passport-local-mongoose");
+  cors = require("cors");
+psMongoose = require("passport-local-mongoose");
 
 app.use(
   require("express-session")({
@@ -19,6 +20,7 @@ app.use(
     saveUninitialized: false,
   })
 );
+app.use(cors());
 
 passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -32,7 +34,8 @@ mongoose.connect("mongodb://localhost/blogs", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-app.set("view engine", "ejs");
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methOvr("_method"));
 
@@ -57,7 +60,7 @@ app.get("/blogs", function (req, res) {
       console.log("ERROR");
     } else {
       // res.render("index",{blogs:blogs});
-      res.json(blogs);
+      res.send(blogs)
     }
   });
 });
