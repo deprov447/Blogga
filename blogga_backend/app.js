@@ -10,7 +10,7 @@ var bodyParser = require("body-parser"),
   passport = require("passport"),
   localStrategy = require("passport-local"),
   cors = require("cors");
-psMongoose = require("passport-local-mongoose");
+  psMongoose = require("passport-local-mongoose");
 
 app.use(
   require("express-session")({
@@ -29,12 +29,13 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// adds dummy data to blogga (for test purposes)
 console.log("Seeding DB with dummy data", seed());
+
 mongoose.connect("mongodb://localhost/blogs", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methOvr("_method"));
@@ -44,16 +45,18 @@ app.listen("8080", function () {
   console.log("GO TO localhost:8080");
 });
 
+// storing user details in localStorage
 app.use(function (req, res, next) {
   res.locals.currUser = req.user;
   next();
 });
 
-//Index
+//Main landing page (redirects to /blogs)
 app.get("/", function (req, res) {
   res.redirect("/blogs");
 });
 
+// main index page
 app.get("/blogs", function (req, res) {
   Blog.find({}, function (err, blogs) {
     if (err) {
@@ -65,12 +68,12 @@ app.get("/blogs", function (req, res) {
   });
 });
 
-//New
+//Add new blogs
 app.get("/blogs/new", isLoggedIn, function (req, res) {
   res.render("new");
 });
 
-//Create
+//add new blogs (post)
 app.post("/blogs", isLoggedIn, function (req, res) {
   req.body.author = res.locals.currUser.username;
   Blog.create(req.body, function (err, newBlog) {
@@ -83,7 +86,7 @@ app.post("/blogs", isLoggedIn, function (req, res) {
   });
 });
 
-//Show
+//Show a particular blog
 app.get("/blogs/:id", function (req, res) {
   Blog.findById(req.params.id)
     .populate("comment")
@@ -97,7 +100,7 @@ app.get("/blogs/:id", function (req, res) {
     });
 });
 
-//Edit
+//Edit a particular blog
 app.get("/blogs/:id/edit", isLoggedIn, function (req, res) {
   Blog.findById(req.params.id, function (err, thatblog) {
     if (err) {
@@ -108,7 +111,7 @@ app.get("/blogs/:id/edit", isLoggedIn, function (req, res) {
   });
 });
 
-//Update
+//Edit a particular blog (Post)
 app.put("/blogs/:id", isLoggedIn, function (req, res) {
   Blog.findByIdAndUpdate(req.params.id, req.body.blog, function (err, updblog) {
     if (err) {
@@ -119,7 +122,7 @@ app.put("/blogs/:id", isLoggedIn, function (req, res) {
   });
 });
 
-//Delete
+//Delete a blog
 app.delete("/blogs/:id", isLoggedIn, function (req, res) {
   Blog.findByIdAndRemove(req.params.id, function (err) {
     if (err) {
@@ -130,7 +133,7 @@ app.delete("/blogs/:id", isLoggedIn, function (req, res) {
   });
 });
 
-//Comment
+//add a Comment to a blog
 app.post("/blogs/:id/comments/new", isLoggedIn, function (req, res) {
   Blog.findById(req.params.id, function (err, Blog) {
     if (err) {
@@ -164,6 +167,7 @@ app.get("/register", function (req, res) {
   res.render("register");
 });
 
+//authentications (post)
 app.post(
   "/login",
   passport.authenticate("local", {
@@ -190,6 +194,7 @@ app.post("/register", function (req, res) {
   );
 });
 
+// checks if user logged in
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.redirect("/login");
