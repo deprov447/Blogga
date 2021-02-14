@@ -10,6 +10,7 @@ const routes: Routes = [
   {path:"",component:CardsComponent},
   {path:"blogDetails",component:DetailsComponent},
   {path:"SignUp",component:SignUpComponent}
+  
 ];
 
 @NgModule({

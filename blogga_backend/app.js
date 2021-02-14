@@ -10,7 +10,7 @@ var bodyParser = require("body-parser"),
   passport = require("passport"),
   localStrategy = require("passport-local"),
   cors = require("cors");
-  psMongoose = require("passport-local-mongoose");
+psMongoose = require("passport-local-mongoose");
 
 app.use(
   require("express-session")({
@@ -37,8 +37,10 @@ mongoose.connect("mongodb://localhost/blogs", {
   useUnifiedTopology: true,
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(methOvr("_method"));
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(methOvr("_method"));
+
+app.use(express.json());
 
 app.listen("8080", function () {
   console.log("Server Online");
@@ -56,6 +58,10 @@ app.get("/", function (req, res) {
   res.redirect("/blogs");
 });
 
+app.get("/checkLogin", isLoggedIn, (req, res) => {
+  res.send({"status":true});
+});
+
 // main index page
 app.get("/blogs", function (req, res) {
   Blog.find({}, function (err, blogs) {
@@ -63,7 +69,7 @@ app.get("/blogs", function (req, res) {
       console.log("ERROR");
     } else {
       // res.render("index",{blogs:blogs});
-      res.send(blogs)
+      res.send(blogs);
     }
   });
 });
@@ -87,7 +93,8 @@ app.post("/blogs", isLoggedIn, function (req, res) {
 });
 
 //Show a particular blog
-app.get("/blogs/:id", function (req, res) {
+app.get("/blogsdetails/:id", function (req, res) {
+  console.log(req.params.id);
   Blog.findById(req.params.id)
     .populate("comment")
     .exec(function (err, foundBlog) {
@@ -154,27 +161,28 @@ app.post("/blogs/:id/comments/new", isLoggedIn, function (req, res) {
 });
 
 ///authentications
-app.get("/login", function (req, res) {
-  res.render("login");
-});
+// app.get("/login", function (req, res) {
+//   res.render("login");
+// });
 
 app.get("/logout", function (req, res) {
+  console.log("A");
   req.logout();
-  res.redirect("/");
 });
 
-app.get("/register", function (req, res) {
-  res.render("register");
-});
+// app.get("/register", function (req, res) {
+//   res.render("register");
+// });
 
 //authentications (post)
 app.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect: "/blogs",
-    failureRedirect: "/login",
+    // CHANGE LATER
   }),
-  function (req, res) {}
+  function (req, res) {
+    console.log(req.user);
+  }
 );
 
 app.post("/register", function (req, res) {
@@ -197,5 +205,5 @@ app.post("/register", function (req, res) {
 // checks if user logged in
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect("/login");
+  res.send({"status":false})
 }

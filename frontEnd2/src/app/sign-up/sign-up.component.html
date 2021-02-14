@@ -1,86 +1,95 @@
 <div *ngIf="signUp_disp; else login_display">
-    <div class="wrapper fadeInDown">
-      <div id="formContent" style="padding-top: 40px">
-        <!-- Tabs Titles -->
+  <div class="wrapper fadeInDown">
+    <div id="formContent" style="padding-top: 40px">
+      <!-- Tabs Titles -->
 
-        <!-- Login Form -->
-        <form>
-          <input
-            type="text"
-            id="login"
-            class="fadeIn second"
-            placeholder="Full Name"
-          />
-          <input
-            type="text"
-            id="login"
-            class="fadeIn second"
-            placeholder="E-mail"
-          />
-          <input
-            type="text"
-            id="login"
-            class="fadeIn second"
-            placeholder="enter username of your choice"
-          />
-          <input
-            type="password"
-            id="password"
-            class="fadeIn third"
-            placeholder="password"
-          />
-          <input
-            type="password"
-            id="password"
-            class="fadeIn third"
-            placeholder="Re-enter password"
-          />
-          <input type="submit" class="fadeIn fourth" (click)="signUpSubmit()" />
-        </form>
-        <!-- Remind Passowrd -->
-        <div id="formFooter">
-          <a class="underlineHover" (click)="openLogin()"
-            >Already a member? Login</a
-          >
-        </div>
+      <!-- Login Form -->
+      <form>
+        <input
+          type="text"
+          id="FullName"
+          class="fadeIn second"
+          placeholder="Full Name"
+          [(ngModel)]="signFormat.FullName"
+          name="Fullname"
+        />
+        <input
+          type="text"
+          id="email"
+          class="fadeIn second"
+          placeholder="E-mail"
+          [(ngModel)]="signFormat.email"
+          name="email"
+        />
+        <input
+          type="text"
+          id="username"
+          class="fadeIn second"
+          placeholder="enter username of your choice"
+          [(ngModel)]="signFormat.username"
+          name="username"
+        />
+        <input
+          type="password"
+          id="password"
+          class="fadeIn third"
+          placeholder="password"
+          [(ngModel)]="signFormat.password"
+          name="password"
+        />
+        <input
+          type="password"
+          id="repassword"
+          class="fadeIn third"
+          placeholder="Re-enter password"
+        />
+        <input type="submit" class="fadeIn fourth" (click)="signUpSubmit()" />
+      </form>
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover" (click)="openLogin()"
+          >Already a member? Login</a
+        >
       </div>
     </div>
   </div>
-  <ng-template #login_display>
-    <div class="wrapper fadeInDown">
-      <div id="formContent" style="padding-top: 40px">
-        <!-- Tabs Titles -->
+</div>
+<ng-template #login_display>
+  <div class="wrapper fadeInDown">
+    <div id="formContent" style="padding-top: 40px">
+      <!-- Tabs Titles -->
 
-        <!-- Login Form -->
-        <form>
-          <input
-            type="text"
-            id="login"
-            class="fadeIn second"
-            placeholder="E-mail"
-          />
+      <!-- Login Form -->
+      <form>
+        <input
+          type="text"
+          id="login"
+          class="fadeIn second"
+          placeholder="User name"
+          [(ngModel)]="loginFormat.username"
+          name="logimUsername"
+        />
 
-          <input
-            type="password"
-            id="password"
-            class="fadeIn third"
-            placeholder="password"
-          />
+        <input
+          type="password"
+          id="password"
+          class="fadeIn third"
+          placeholder="password"
+          [(ngModel)]="loginFormat.password"
+          name="passLogin"
+        />
 
-          <input type="submit" class="fadeIn fourth" (click)="loginSubmit()" />
-        </form>
-        <!-- Remind Passowrd -->
-        
-      </div>
+        <input type="submit" class="fadeIn fourth" (click)="loginSubmit()" />
+      </form>
+      <!-- Remind Passowrd -->
     </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="py-5 bg-dark">
-      <div class="container">
-        <p class="m-0 text-center text-white">
-          Copyright &copy; myblog.com 2020
-        </p>
-      </div>
-      <!-- /.container -->
-    </footer>
-  </ng-template>
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; myblog.com 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+</ng-template>

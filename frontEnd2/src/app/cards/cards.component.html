@@ -18,7 +18,7 @@
         {{ item.created.substring(0, 10) }}
       </span>
       <div class="btn">
-        <a [routerLink]="['/blogDetails']" routerLinkActive="router-link-active" >Read more</a>
+        <a [routerLink]="['/blogDetails']" routerLinkActive="router-link-active" (click)="retriveID(item._id)">Read more</a>
       </div>
     </div>
   </div>
